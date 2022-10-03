@@ -23,7 +23,7 @@ final class AppMenuEventListener implements KnpMenuHelperInterface
 
     // this should be optional, not sure if we really need it here.
     public function __construct(
-//        private BarcodeService $barcodeService,
+        private BarcodeService $barcodeService,
         private ?AuthorizationCheckerInterface $security=null)
     {
     }
