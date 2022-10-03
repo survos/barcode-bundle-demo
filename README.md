@@ -35,9 +35,37 @@ See https://askubuntu.com/questions/992448/how-to-execute-a-bash-script-from-git
 These are the steps to recreate this demo locally. 
 
 ```bash
-DIR=select-demo && mkdir $DIR && cd $DIR && symfony new --webapp . 
+DIR=barcode-demo && mkdir $DIR && cd $DIR && symfony new --webapp . 
 composer req survos/maker-bundle --dev
+composer req survos/barcode-bundle
 echo "DATABASE_URL=sqlite:///%kernel.project_dir%/var/data.db" > .env.local
+# replace the default base with our bootstrap/sneat theme
+echo "{% extends '@SurvosBootstrap/sneat/base.html.twig' %}" > templates/base.html.twig
+
+console survos:make:menu App 
+
+cat << 'EOF' | symfony console survos:class:update  App\\Command\\AppImportCountriesCommand --diff \
+  -m __invoke \
+  --use App\\Entity\\Country \
+  --use "Symfony\Component\Intl\Countries" \
+  --inject "App\Repository\CountryRepository" \
+  --inject 'Doctrine\ORM\EntityManagerInterface $em' \
+  && vendor/bin/ecs check src/Command --fix
+        $em->createQuery('DELETE FROM ' . Country::class)->execute();
+
+        // the invoke body goes here, NOT the entire signature
+        $countries = Countries::getNames();
+        foreach ($countries as $alpha2 => $name) {
+            $country = new Country();
+            $country
+                ->setName($name)
+                ->setAlpha2($alpha2);
+            $em->persist($country);
+        }
+        $em->flush();
+        $io->success(sprintf("%d countries imported.", $countryRepository->count([])));
+EOF
+
 
 # create the entity from symfony/maker-bundle
 git clean -f src

@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    {{ generatorCode }}
+
+    {% for type in types %}
+        <h4>{{ type }}</h4>
+        <div>
+            {% set barcodeData = barcode('abc', generator_class=generatorClass) %}
+            {% if imageFormat %}
+                <img src='data:{{ imageFormat }};base64,{{ barcodeData }}' />
+            {% else %}
+            {{ barcodeData|raw }}
+                {% endif %}
+        </div>
+        {{ component('divider') }}
+    {% endfor %}
+
+    {{ 'test'|barcode }} or {{ barcode('test', 2, 80, 'red') }}
+
+
+{% endblock %}
