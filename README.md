@@ -1,5 +1,11 @@
 # barcode-bundle-demo
 
+## Install with Docker
+
+Base on https://medium.com/@dotcom.software/serving-resized-s3-images-on-the-fly-6b052ee3b0ca
+
+docker-compose exec php sh
+
 Demo for barcoe-bundle [survos/barcode-bundle](https://github.com/survos/BarcodeBundle), a Symfony bundle that exposes the methods of picqer/php-barcode-generator.  
 
 ## Run This Demo Locally
