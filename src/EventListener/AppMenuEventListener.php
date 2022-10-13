@@ -30,20 +30,22 @@ final class AppMenuEventListener implements KnpMenuHelperInterface
     public function sidebarMenu(KnpMenuEvent $event): void
     {
         $menu = $event->getMenu();
+        $this->add($menu, 'app_app', label: 'Home');
 
         $this->addHeading($menu, 'Generators');
-        foreach ($this->barcodeService->getGeneratorClasses() as $code => $generatorClass) {
-            $this->add($menu, 'app_demo', ['generatorCode' => $code], label: $code);
+        foreach ($this->barcodeService->getGenerators() as $code => $generator) {
+            $this->add($menu, 'app_demo', ['generatorCode' => $code], label: str_replace('BarcodeGenerator', '', $code));
         }
         $options = $event->getOptions();
 
 //        $this->add($menu, 'app_homepage');
         // for nested menus, don't add a route, just a label, then use it for the argument to addMenuItem
 
-        $nestedMenu = $this->addSubmenu($menu, 'Credits');
-        foreach (['bundles', 'javascript'] as $type) {
+        $this->addHeading($menu, 'Resources');
+        foreach (['BarcodeBundle' => 'https://github.com/survos/BarcodeBundle',
+                     'generator'  => 'https://github.com/picqer/php-barcode-generator'] as $label => $url) {
             // $this->addMenuItem($nestedMenu, ['route' => 'survos_base_credits', 'rp' => ['type' => $type], 'label' => ucfirst($type)]);
-            $this->addMenuItem($nestedMenu, ['uri' => "#$type", 'label' => ucfirst($type)]);
+            $this->add($menu, uri: $url,  label: $label); // , external:  true);
         }
     }
 

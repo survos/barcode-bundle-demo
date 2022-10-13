@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\ProductRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Survos\BarcodeBundle\Service\BarcodeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +18,7 @@ class AppController extends AbstractController
     }
 
     #[Route('/', name: 'app_app')]
-    public function index(Request $request): Response
+    public function index(Request $request, ProductRepository $productRepository): Response
     {
         $string = $request->get('q', 'abcdefg');
 
@@ -28,6 +29,7 @@ class AppController extends AbstractController
 
         return $this->render('app/index.html.twig', [
             'string' => $string,
+            'products' => $productRepository->findAll(),
             'extensions' => $extensionCheck,
             'generators' => $this->barcodeService->getGenerators()
         ]);

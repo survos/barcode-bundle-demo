@@ -1,20 +1,43 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 
-    <h2>Barcodes for '{{ string }}'</h2>
-    {% for shortName, generator in generators %}
-        <h3>{{ shortName }}</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Product</th>
+            <th>ID</th>
+            {% for shortName, generator in generators %}
+                <th>{{ shortName }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ product.name }}
+                </td>
+                <td>
+                    {{ product.id }}
+                </td>
+                {% for shortName, generator in generators %}
+                    <td>
+                        {% set barcodeData = barcode(product.name, generator_class=generator.class) %}
+                        {% if generator.imageFormat %}
+                            <img src='data:{{ generator.imageFormat }};base64,{{ barcodeData }}' />
+                        {% else %}
+                            {{ barcodeData|raw }}
+                        {% endif %}
+                        <br />{{ product.name }}
+                    </td>
+                {% endfor %}
 
-        <div>
-            {% set barcodeData = barcode(string, generator_class=generator.class) %}
-            {% if generator.imageFormat %}
-                <img src='data:{{ generator.imageFormat }};base64,{{ barcodeData }}' />
-            {% else %}
-                {{ barcodeData|raw }}
-            {% endif %}
-        </div>
+            </tr>
 
-    {% endfor %}
+        {% endfor %}
+
+        </tbody>
+
+    </table>
 
     {{ component('divider') }}
 

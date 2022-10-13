@@ -4,6 +4,12 @@ FROM php:8.1-fpm-alpine as base
 ARG USER_UID=82
 ARG USER_GID=82
 
+RUN set -ex \
+  && apk --no-cache add \
+    postgresql-dev
+
+RUN docker-php-ext-install pdo pdo_pgsql
+
 # Recreate www-data user with user id matching the host
 RUN deluser --remove-home www-data && \
     addgroup -S -g ${USER_GID} www-data && \
