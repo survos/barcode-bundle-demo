@@ -1,4 +1,27 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-{{ 'test'|barcode }} or {{ barcode('test', 2, 80, 'red') }}
+
+    <h2>Barcodes for '{{ string }}'</h2>
+    {% for shortName, generator in generators %}
+        <h3>{{ shortName }}</h3>
+
+        <div>
+            {% set barcodeData = barcode(string, generator_class=generator.class) %}
+            {% if generator.imageFormat %}
+                <img src='data:{{ generator.imageFormat }};base64,{{ barcodeData }}' />
+            {% else %}
+                {{ barcodeData|raw }}
+            {% endif %}
+        </div>
+
+    {% endfor %}
+
+    {{ component('divider') }}
+
+    <h3>Extension Check</h3>
+    <ul>
+    {% for ext, isLoaded in extensions %}
+        <li><span class="text-{{ isLoaded ? 'success' : 'danger' }}">{{ ext }}, {{ isLoaded ? 'yes' : 'no' }}</span> </li>
+    {% endfor %}
+    </ul>
 {% endblock %}

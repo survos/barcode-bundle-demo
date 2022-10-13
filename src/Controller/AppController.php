@@ -5,16 +5,31 @@ namespace App\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Survos\BarcodeBundle\Service\BarcodeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AppController extends AbstractController
 {
-    #[Route('/', name: 'app_app')]
-    public function index(): Response
+
+    public function __construct(private BarcodeService $barcodeService)
     {
+    }
+
+    #[Route('/', name: 'app_app')]
+    public function index(Request $request): Response
+    {
+        $string = $request->get('q', 'abcdefg');
+
+        $extensionCheck  = array_reduce(['gd', 'imagick'], function(array $carry, $ext) {
+            $carry[$ext] = extension_loaded($ext);
+            return $carry;
+        }, []);
+
         return $this->render('app/index.html.twig', [
-            'controller_name' => 'AppController',
+            'string' => $string,
+            'extensions' => $extensionCheck,
+            'generators' => $this->barcodeService->getGenerators()
         ]);
     }
 

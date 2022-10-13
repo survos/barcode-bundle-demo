@@ -1,5 +1,24 @@
 # barcode-bundle-demo
 
+## Clone 
+
+```bash
+git clone git@github.com:survos/barcode-bundle-demo.git
+cd barcode-bundle-demo
+```
+
+## Run Locally (local php)
+
+```bash
+symfony composer install
+symfony run yarn install
+symfony run yarn dev
+# if using symfony proxy
+proxy:domain:attach barcode-demo 
+symfony server:start -d
+# open https://barcode-demo.wip or https://localhost:8000 (or whatever the next port is)
+```
+
 ## Install with Docker
 
 Base on https://medium.com/@dotcom.software/serving-resized-s3-images-on-the-fly-6b052ee3b0ca

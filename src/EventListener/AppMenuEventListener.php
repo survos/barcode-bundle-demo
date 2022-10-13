@@ -16,15 +16,14 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 #[AsEventListener(event: KnpMenuEvent::SIDEBAR_MENU_EVENT, method: 'sidebarMenu')]
 #[AsEventListener(event: KnpMenuEvent::PAGE_MENU_EVENT, method: 'pageMenu')]
 #[AsEventListener(event: KnpMenuEvent::NAVBAR_MENU_EVENT, method: 'navbarMenu')]
-
 final class AppMenuEventListener implements KnpMenuHelperInterface
 {
     use KnpMenuHelperTrait;
 
     // this should be optional, not sure if we really need it here.
     public function __construct(
-        private BarcodeService $barcodeService,
-        private ?AuthorizationCheckerInterface $security=null)
+        private BarcodeService                 $barcodeService,
+        private ?AuthorizationCheckerInterface $security = null)
     {
     }
 
@@ -44,17 +43,17 @@ final class AppMenuEventListener implements KnpMenuHelperInterface
         $nestedMenu = $this->addSubmenu($menu, 'Credits');
         foreach (['bundles', 'javascript'] as $type) {
             // $this->addMenuItem($nestedMenu, ['route' => 'survos_base_credits', 'rp' => ['type' => $type], 'label' => ucfirst($type)]);
-            $this->addMenuItem($nestedMenu, ['uri' => "#$type" , 'label' => ucfirst($type)]);
+            $this->addMenuItem($nestedMenu, ['uri' => "#$type", 'label' => ucfirst($type)]);
         }
     }
 
-public function pageMenu(KnpMenuEvent $event): void
-{
-}
+    public function pageMenu(KnpMenuEvent $event): void
+    {
+    }
 
-public function navbarMenu(KnpMenuEvent $event): void
-{
+    public function navbarMenu(KnpMenuEvent $event): void
+    {
 
-}
+    }
 
 }
