@@ -1,3 +1,5 @@
+version: "3.8"
+
 # https://medium.com/@cleverti/how-to-setup-docker-for-a-symfony-project-26d304359592
 
 services:
@@ -9,23 +11,23 @@ services:
     env_file:
       - .env
 
-  nginx:
-    image: nginx:1-alpine
-    depends_on:
-      - php
-    ports:
-      - "8201:80"
-    volumes:
-      - ./artifacts/nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./public:/var/www/html/public
+#  nginx:
+#    image: nginx:1-alpine
+#    depends_on:
+#      - php
+#    ports:
+#      - "8201:80"
+#    volumes:
+#      - ./artifacts/nginx.conf:/etc/nginx/conf.d/default.conf
+#      - ./public:/var/www/html/public
 
   postgres:
     image: postgres:14.5-alpine
     restart: on-failure
     environment:
-      POSTGRES_DB: test
-      POSTGRES_USER: sf_user
-      POSTGRES_PASSWORD: random_password
+      POSTGRES_DB: barcode
+      POSTGRES_USER: main
+      POSTGRES_PASSWORD: main
       PGDATA: /var/lib/postgresql/data
     volumes:
       - db-data:/var/lib/postgresql/data:rw
