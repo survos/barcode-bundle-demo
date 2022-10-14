@@ -9,14 +9,18 @@ git clone git@github.com:survos/barcode-bundle-demo.git
 cd barcode-bundle-demo
 ```
 
-## Run Locally (local php)
+## Run Locally (local php, Symfony CLI)
 
 Home page will show barcoded images and the image libraries that are installed locally (gd and/or imagick).
 
 ```bash
+docker-compose up -d
 symfony composer install
 symfony run yarn install
 symfony run yarn dev
+
+symfony console doctrine:migrations:migrate -n
+symfony console app:load-products
 # if using symfony proxy
 proxy:domain:attach barcode-demo 
 symfony server:start -d
