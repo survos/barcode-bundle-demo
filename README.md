@@ -14,7 +14,7 @@ cd barcode-bundle-demo
 Home page will show barcoded images and the image libraries that are installed locally (gd and/or imagick).
 
 ```bash
-docker-compose up -d
+docker compose up -d
 symfony composer install
 symfony run yarn install
 symfony run yarn dev
