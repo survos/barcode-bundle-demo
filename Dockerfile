@@ -1,6 +1,6 @@
 ARG PHP_VERSION=8.1
 ARG NGINX_VERSION=1.18
-ARG POSTGRES_VERSION=4.5
+#ARG POSTGRES_VERSION=14.5
 
 ARG WORKDIR=/app
 
@@ -46,15 +46,13 @@ RUN apk add --no-cache postgresql-dev && docker-php-ext-install pdo pdo_pgsql
 #    && docker-php-ext-install gd \
 #    && docker-php-ext-enable gd \
 
-RUN apk add --no-cache mysql-client msmtp perl wget procps shadow libzip libpng libjpeg-turbo libwebp freetype icu
+RUN apk add --no-cache msmtp perl wget procps shadow libzip libpng libjpeg-turbo libwebp freetype icu
 # https://github.com/rhamdeew/docker-php-8-fpm-alpine/blob/master/Dockerfile
 RUN apk add --no-cache --virtual build-essentials \
     icu-dev icu-libs zlib-dev g++ make automake autoconf libzip-dev \
     libpng-dev libwebp-dev libjpeg-turbo-dev freetype-dev && \
     docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp && \
     docker-php-ext-install gd && \
-    docker-php-ext-install mysqli && \
-    docker-php-ext-install pdo_mysql && \
     docker-php-ext-install intl && \
     docker-php-ext-install opcache && \
     docker-php-ext-install exif && \
@@ -63,16 +61,16 @@ RUN apk add --no-cache --virtual build-essentials \
 #    && rm -rf /usr/src/php* \
 
 # Imagick module
-RUN apk add --no-cache libgomp imagemagick imagemagick-dev && \
-	pecl install -o -f imagick && \
-	docker-php-ext-enable imagick
-
-# Symfony CLI tool
-RUN apk add --no-cache bash && \
-	curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.alpine.sh' | bash && \
-	apk add symfony-cli && \
-	apk del bash
-
+#RUN apk add --no-cache libgomp imagemagick imagemagick-dev && \
+#	pecl install -o -f imagick && \
+#	docker-php-ext-enable imagick
+#
+## Symfony CLI tool
+#RUN apk add --no-cache bash && \
+#	curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.alpine.sh' | bash && \
+#	apk add symfony-cli && \
+#	apk del bash
+#
 # XDebug from PECL
 RUN pecl install xdebug-3.1.5
 
