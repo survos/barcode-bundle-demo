@@ -22,7 +22,7 @@ symfony run yarn dev
 symfony console doctrine:migrations:migrate -n
 symfony console app:load-products
 # if using symfony proxy
-proxy:domain:attach barcode-demo 
+symfony proxy:domain:attach barcode-demo 
 symfony server:start -d
 # open https://barcode-demo.wip or https://localhost:8000 (or whatever the next port is)
 ```
