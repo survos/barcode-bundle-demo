@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+  php:
+    image: ${REGISTRY_IMAGE}/app_php:${TAG}
+    env_file:
+      - .app_env
+    healthcheck:
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    networks:
+      - backend
+    restart: unless-stopped
+    volumes:
+      - /mnt/data/barcode/app/log:/var/www/app/var/log
+
+  nginx:
+    image: ${REGISTRY_IMAGE}/app_nginx:${TAG}
+    depends_on:
+      - php
+    networks:
+      - backend
+      - webproxy
+    restart: unless-stopped
+    labels: &nginx_labels
+      - "traefik.enable=true"
+      - "traefik.http.routers.barcode-nginx.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.barcode-nginx.entrypoints=websecure"
+      - "traefik.http.routers.barcode-nginx.tls=true"
+      - "traefik.http.routers.barcode-nginx.tls.certresolver=myhttpchallenge"
+      - "traefik.port=80"
+      - "traefik.docker.network=webproxy"
+    ports: # todo: remove
+      - '8069:80'
+
+networks:
+  backend:
+  webproxy:
+    external: true

@@ -1,6 +1,0 @@
-services:
-  php:
-    extra_hosts:
-      - host.docker.internal:host-gateway
-    volumes:
-      - ./artifacts/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
