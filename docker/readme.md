@@ -1,7 +1,6 @@
 ## Run in prod mode
 ```
 export DATABASE_URL="postgresql://main:main@172.17.0.1:5432/barcode?serverVersion=14.5\&charset=utf8"
-export MESSENGER_TRANSPORT_DSN="amqp://guest:guest@172.17.0.1:5662/%2f/messages"
 DOCKER_ENV=prod APP_ENV=prod bin/copy-env.sh
 bin/build.sh
 

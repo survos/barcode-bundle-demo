@@ -32,8 +32,8 @@ services:
       - "traefik.http.routers.barcode-nginx.tls.certresolver=myhttpchallenge"
       - "traefik.port=80"
       - "traefik.docker.network=webproxy"
-    ports: # todo: remove
-      - '8069:80'
+#    ports: # todo: remove
+#      - '8069:80'
 
 networks:
   backend:

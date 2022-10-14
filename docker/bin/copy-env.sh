@@ -21,13 +21,6 @@ REGISTRY_IMAGE=${CI_REGISTRY_IMAGE:-hub.docker.com/project}
 REGISTRY_USER=${CI_REGISTRY_USER:-user}
 REGISTRY_PASSWORD=${CI_REGISTRY_PASSWORD:-***}
 
-RABBITMQ_HOST=rabbitmq
-RABBITMQ_PORT=5672
-RABBITMQ_MANAGEMENT_PORT=15672
-RABBITMQ_USER=radmin
-RABBITMQ_PASSWORD=guest
-MESSENGER_TRANSPORT_DSN=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@${RABBITMQ_HOST}:${RABBITMQ_PORT}/%2f/messages
-
 case "$DOCKER_ENV" in
     "prod")
         COMPOSE_FILE=docker-compose.prod.yml
@@ -65,13 +58,18 @@ sed -e" \
 sed -e" \
     s#^APP_ENV=.*#APP_ENV=$APP_ENV#; \
     s#^VERSION=.*#VERSION=$VERSION#; \
-    s#^MESSENGER_TRANSPORT_DSN=.*#MESSENGER_TRANSPORT_DSN=$MESSENGER_TRANSPORT_DSN#; \
 " ${APPLICATION}/.env > .app_env
 
 
 if [ ! -z "$DATABASE_URL" ] ; then
     sed -i " \
         s#^DATABASE_URL=.*#DATABASE_URL=$DATABASE_URL#; \
+    " .app_env
+fi
+
+if [ ! -z "$MESSENGER_TRANSPORT_DSN" ] ; then
+    sed -i " \
+        s#^MESSENGER_TRANSPORT_DSN=.*#MESSENGER_TRANSPORT_DSN=$MESSENGER_TRANSPORT_DSN#; \
     " .app_env
 fi
 

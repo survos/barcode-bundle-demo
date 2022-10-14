@@ -47,7 +47,7 @@ deploy prod:
   stage: deploy
   environment:
     name: barcode-prod
-    url: https://your-domain.com
+    url: https://barcode-bundle-demo.survos.com
   only:
     - tags
     - branches
@@ -58,16 +58,16 @@ deploy prod:
     APP_ENV: prod
     COMPOSE_PROJECT_NAME: barcode
     DATABASE_URL: ${PROD_DATABASE_URL}
-    DOMAIN: your-domain.com
+    DOMAIN: barcode-bundle-demo.survos.com
     # connect to the server
     DOCKER_TLS_VERIFY: "1"
-    DOCKER_HOST: $HZ1_DOCKER_HOST
+    DOCKER_HOST: $SURVOSHZ1_DOCKER_HOST
     DOCKER_CERT_PATH: "/tmp/certs"
   before_script:
     - mkdir -p $DOCKER_CERT_PATH
-    - echo "$HZ1_CA" > $DOCKER_CERT_PATH/ca.pem
-    - echo "$HZ1_CLIENT_CERT" > $DOCKER_CERT_PATH/cert.pem
-    - echo "$HZ1_CLIENT_KEY" > $DOCKER_CERT_PATH/key.pem
+    - echo "$SURVOSHZ1_CA" > $DOCKER_CERT_PATH/ca.pem
+    - echo "$SURVOSHZ1_CLIENT_CERT" > $DOCKER_CERT_PATH/cert.pem
+    - echo "$SURVOSHZ1_CLIENT_KEY" > $DOCKER_CERT_PATH/key.pem
     - ls -alh $DOCKER_CERT_PATH
     - echo ${CI_REGISTRY_PASSWORD} | docker login ${CI_REGISTRY} -u ${CI_REGISTRY_USER} --password-stdin
   script:
