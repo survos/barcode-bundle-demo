@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Kernel;
 use App\Repository\ProductRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Survos\BarcodeBundle\Service\BarcodeService;
@@ -28,6 +29,7 @@ class AppController extends AbstractController
         }, []);
 
         return $this->render('app/index.html.twig', [
+            'symfonyVersion' => Kernel::VERSION,
             'string' => $string,
             'products' => $productRepository->findAll(),
             'extensions' => $extensionCheck,
