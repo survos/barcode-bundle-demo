@@ -71,11 +71,6 @@ RUN set -eux; \
     composer install --prefer-dist --no-dev --no-scripts --no-progress --no-suggest; \
     composer clear-cache
 
-COPY assets ./assets/
-COPY public ./public/
-COPY webpack.config.js ./
-COPY package.json yarn.lock ./
-
 # do not use .env files in production
 COPY .env ./
 RUN composer dump-env prod; \
@@ -89,6 +84,10 @@ COPY migrations migrations/
 COPY src src/
 COPY templates templates/
 COPY translations translations/
+COPY assets ./assets/
+COPY public ./public/
+COPY webpack.config.js ./
+COPY package.json yarn.lock ./
 
 RUN set -eux; \
     mkdir -p var/cache var/log var/videos; \
@@ -101,7 +100,7 @@ RUN apk add --no-cache nodejs yarn && \
     mkdir -p public/build && \
     node_modules/.bin/encore production && \
     rm -rf node_modules && \
-    apk del nodejs yarn --quiet && sync \
+    apk del nodejs yarn --quiet && sync
 
 VOLUME /var/www/app/var
 
