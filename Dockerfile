@@ -62,19 +62,6 @@ ENV PATH="${PATH}:/root/.composer/vendor/bin"
 WORKDIR /var/www/app
 
 
-FROM node:16.13-alpine as encore_assets
-
-WORKDIR /app
-
-COPY package.json package-lock.json ./
-RUN npm ci
-
-COPY assets ./assets/
-COPY webpack.config.js ./
-RUN mkdir -p public/build; \
-    node_modules/.bin/encore production
-
-
 # "php prod" stage
 FROM app_php_base AS app_php
 
@@ -83,6 +70,11 @@ COPY composer.json composer.lock symfony.lock ./
 RUN set -eux; \
     composer install --prefer-dist --no-dev --no-scripts --no-progress --no-suggest; \
     composer clear-cache
+
+COPY assets ./assets/
+COPY public ./public/
+COPY webpack.config.js ./
+COPY package.json yarn.lock ./
 
 # do not use .env files in production
 COPY .env ./
@@ -98,13 +90,19 @@ COPY src src/
 COPY templates templates/
 COPY translations translations/
 
-COPY --from=encore_assets /app/public/build ./public/build/
-
 RUN set -eux; \
     mkdir -p var/cache var/log var/videos; \
     composer dump-autoload --classmap-authoritative --no-dev; \
     composer run-script --no-dev post-install-cmd; \
     chmod +x bin/console; sync
+
+RUN apk add --no-cache nodejs yarn && \
+    yarn install --force && \
+    mkdir -p public/build && \
+    node_modules/.bin/encore production && \
+    rm -rf node_modules && \
+    apk del nodejs yarn --quiet && sync \
+
 VOLUME /var/www/app/var
 
 COPY docker/php/docker-healthcheck.sh /usr/local/bin/docker-healthcheck
